@@ -24,9 +24,10 @@ For the MVP, this will run locally (in a docker container)
 - Everything packaged into a Docker container
 - Use "uv" as the package manager for python in the Docker container
 - Use OpenRouter for the AI calls. An OPENROUTER_API_KEY is in .env in the project root
-- Use `openai/gpt-oss-120b` as the model
-- Use SQLLite local database for the database, creating a new db if it doesn't exist
-- Start and Stop server scripts for Mac, PC, Linux in scripts/
+- Use `openai/gpt-oss-120b:free` as the current MVP model variant so local development works without purchased credits
+- Use backend-owned structured JSON responses on `/api/chat`; validate AI actions before any board mutation
+- Use SQLite local database for the database, creating a new db if it doesn't exist
+- Start and Stop server scripts for Linux in scripts/
 
 ## Starting Point
 

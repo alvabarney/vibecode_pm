@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PM MVP - Hello</title>
+    <style>
+      :root {
+        --accent-yellow: #ecad0a;
+        --primary-blue: #209dd7;
+        --secondary-purple: #753991;
+        --navy-dark: #032147;
+        --gray-text: #888888;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f7f9fc;
+        color: var(--navy-dark);
+      }
+
+      main {
+        max-width: 720px;
+        margin: 64px auto;
+        padding: 24px;
+        background: white;
+        border: 1px solid #dde4ef;
+        border-radius: 16px;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 16px;
+        cursor: pointer;
+        background: var(--secondary-purple);
+        color: white;
+        font-weight: 700;
+      }
+
+      #result {
+        margin-top: 16px;
+        color: var(--gray-text);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Hello World static page</p>
+      <h1>Project Management MVP - Compose Scaffold</h1>
+      <p>
+        This temporary page validates static serving in Docker Compose and can
+        call the backend API.
+      </p>
+      <button id="call-api" type="button">Call backend /api/hello</button>
+      <pre id="result">Waiting for API call...</pre>
+    </main>
+    <script>
+      const button = document.getElementById("call-api");
+      const result = document.getElementById("result");
+
+      button.addEventListener("click", async () => {
+        result.textContent = "Calling API...";
+        try {
+          const response = await fetch("http://localhost:18000/api/hello");
+          const data = await response.json();
+          result.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          result.textContent = String(error);
+        }
+      });
+    </script>
+  </body>
+</html>

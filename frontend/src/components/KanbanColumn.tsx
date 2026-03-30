@@ -1,16 +1,20 @@
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import type { Card, Column } from "@/lib/kanban";
+import { getCardDndId, getColumnDndId, type Card, type Column } from "@/lib/kanban";
 import { KanbanCard } from "@/components/KanbanCard";
 import { NewCardForm } from "@/components/NewCardForm";
 
 type KanbanColumnProps = {
   column: Column;
   cards: Card[];
-  onRename: (columnId: string, title: string) => void;
-  onAddCard: (columnId: string, title: string, details: string) => void;
-  onDeleteCard: (columnId: string, cardId: string) => void;
+  onRename: (columnId: number, title: string) => Promise<void>;
+  onAddCard: (columnId: number, title: string, details: string) => Promise<void>;
+  onDeleteCard: (cardId: number) => Promise<void>;
+  onEditCard: (card: Card) => void;
+  isSaving: boolean;
+  isActiveDropTarget: boolean;
 };
 
 export const KanbanColumn = ({
@@ -19,15 +23,38 @@ export const KanbanColumn = ({
   onRename,
   onAddCard,
   onDeleteCard,
+  onEditCard,
+  isSaving,
+  isActiveDropTarget,
 }: KanbanColumnProps) => {
-  const { setNodeRef, isOver } = useDroppable({ id: column.id });
+  const { setNodeRef } = useDroppable({ id: getColumnDndId(column.id) });
+  const [draftTitle, setDraftTitle] = useState(column.title);
+
+  useEffect(() => {
+    setDraftTitle(column.title);
+  }, [column.title]);
+
+  const submitRename = async () => {
+    const cleanedTitle = draftTitle.trim();
+    if (!cleanedTitle) {
+      setDraftTitle(column.title);
+      return;
+    }
+
+    if (cleanedTitle === column.title) {
+      setDraftTitle(column.title);
+      return;
+    }
+
+    await onRename(column.id, cleanedTitle);
+  };
 
   return (
     <section
       ref={setNodeRef}
       className={clsx(
         "flex min-h-[520px] flex-col rounded-3xl border border-[var(--stroke)] bg-[var(--surface-strong)] p-4 shadow-[var(--shadow)] transition",
-        isOver && "ring-2 ring-[var(--accent-yellow)]"
+        isActiveDropTarget && "ring-2 ring-[var(--accent-yellow)]"
       )}
       data-testid={`column-${column.id}`}
     >
@@ -40,20 +67,45 @@ export const KanbanColumn = ({
             </span>
           </div>
           <input
-            value={column.title}
-            onChange={(event) => onRename(column.id, event.target.value)}
+            value={draftTitle}
+            onChange={(event) => setDraftTitle(event.target.value)}
+            onBlur={() => {
+              void submitRename();
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                event.currentTarget.blur();
+              }
+              if (event.key === "Escape") {
+                setDraftTitle(column.title);
+                event.currentTarget.blur();
+              }
+            }}
             className="mt-3 w-full bg-transparent font-display text-lg font-semibold text-[var(--navy-dark)] outline-none"
             aria-label="Column title"
+            disabled={isSaving}
           />
         </div>
       </div>
+      <NewCardForm
+        onAdd={(title, details) => {
+          void onAddCard(column.id, title, details);
+        }}
+        isSaving={isSaving}
+      />
       <div className="mt-4 flex flex-1 flex-col gap-3">
-        <SortableContext items={column.cardIds} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={cards.map((card) => getCardDndId(card.id))}
+          strategy={verticalListSortingStrategy}
+        >
           {cards.map((card) => (
             <KanbanCard
               key={card.id}
               card={card}
-              onDelete={(cardId) => onDeleteCard(column.id, cardId)}
+              onDelete={(cardId) => onDeleteCard(cardId)}
+              onEdit={onEditCard}
+              isSaving={isSaving}
             />
           ))}
         </SortableContext>
@@ -63,9 +115,6 @@ export const KanbanColumn = ({
           </div>
         )}
       </div>
-      <NewCardForm
-        onAdd={(title, details) => onAddCard(column.id, title, details)}
-      />
     </section>
   );
 };

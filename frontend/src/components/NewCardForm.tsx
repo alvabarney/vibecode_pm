@@ -4,9 +4,10 @@ const initialFormState = { title: "", details: "" };
 
 type NewCardFormProps = {
   onAdd: (title: string, details: string) => void;
+  isSaving?: boolean;
 };
 
-export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
+export const NewCardForm = ({ onAdd, isSaving = false }: NewCardFormProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formState, setFormState] = useState(initialFormState);
 
@@ -32,6 +33,7 @@ export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
             placeholder="Card title"
             className="w-full rounded-xl border border-[var(--stroke)] bg-white px-3 py-2 text-sm font-medium text-[var(--navy-dark)] outline-none transition focus:border-[var(--primary-blue)]"
             required
+            disabled={isSaving}
           />
           <textarea
             value={formState.details}
@@ -41,11 +43,13 @@ export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
             placeholder="Details"
             rows={3}
             className="w-full resize-none rounded-xl border border-[var(--stroke)] bg-white px-3 py-2 text-sm text-[var(--gray-text)] outline-none transition focus:border-[var(--primary-blue)]"
+            disabled={isSaving}
           />
           <div className="flex items-center gap-2">
             <button
               type="submit"
               className="rounded-full bg-[var(--secondary-purple)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:brightness-110"
+              disabled={isSaving}
             >
               Add card
             </button>
@@ -56,6 +60,7 @@ export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
                 setFormState(initialFormState);
               }}
               className="rounded-full border border-[var(--stroke)] px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--gray-text)] transition hover:text-[var(--navy-dark)]"
+              disabled={isSaving}
             >
               Cancel
             </button>
@@ -66,6 +71,7 @@ export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
           type="button"
           onClick={() => setIsOpen(true)}
           className="w-full rounded-full border border-dashed border-[var(--stroke)] px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--primary-blue)] transition hover:border-[var(--primary-blue)]"
+          disabled={isSaving}
         >
           Add a card
         </button>
