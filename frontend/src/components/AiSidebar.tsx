@@ -39,26 +39,24 @@ export const AiSidebar = ({
   };
 
   return (
-    <aside className="rounded-[32px] border border-[var(--stroke)] bg-white/90 p-6 shadow-[var(--shadow)] backdrop-blur">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--gray-text)]">
-            AI Chat
-          </p>
-          <h2 className="mt-3 font-display text-2xl font-semibold text-[var(--navy-dark)]">
-            Assistant
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--gray-text)]">
-            Ask for updates, card edits, or quick board cleanups.
-          </p>
+    <aside className="rounded-[32px] border border-[var(--stroke)] bg-white/90 p-5 shadow-[var(--shadow)] backdrop-blur">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-[var(--secondary-purple)]">
+            <path fillRule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 0 0 1.28.53l3.58-3.579a.78.78 0 0 1 .527-.224 41.202 41.202 0 0 0 5.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0 0 10 2Zm0 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM8 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm5 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clipRule="evenodd" />
+          </svg>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--gray-text)]">AI</p>
+            <h2 className="font-display text-lg font-semibold text-[var(--navy-dark)]">Assistant</h2>
+          </div>
         </div>
-        <div className="rounded-full border border-[var(--stroke)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--primary-blue)]">
+        <div className="rounded-full border border-[var(--stroke)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--primary-blue)]">
           Live
         </div>
       </div>
 
       <div
-        className="mt-6 flex h-[420px] flex-col gap-4 overflow-y-auto rounded-[24px] border border-[var(--stroke)] bg-[var(--surface)] p-4"
+        className="mt-4 flex h-[380px] flex-col gap-3 overflow-y-auto rounded-[24px] border border-[var(--stroke)] bg-[var(--surface)] p-3"
         aria-label="AI conversation"
       >
         {messages.length === 0 ? (
@@ -92,7 +90,7 @@ export const AiSidebar = ({
         <label className="block text-sm font-semibold text-[var(--navy-dark)]">
           Message
           <textarea
-            className="mt-2 min-h-28 w-full rounded-[24px] border border-[var(--stroke)] bg-[var(--surface)] px-4 py-3 text-sm outline-none transition focus:border-[var(--primary-blue)]"
+            className="mt-2 min-h-16 w-full rounded-[24px] border border-[var(--stroke)] bg-[var(--surface)] px-4 py-3 text-sm outline-none transition focus:border-[var(--primary-blue)]"
             placeholder="Ask the assistant to create, edit, move, or explain a card..."
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
